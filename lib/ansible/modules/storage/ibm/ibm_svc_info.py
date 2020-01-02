@@ -49,8 +49,8 @@ options:
         - nf - nvme fabric
         - array - array MDisks info
         - system - storage system info
-        choices: 
-        [vol, pool, node, iog, host, hc, fcport, iscsiport, nf, array, system]
+        choices: [vol, pool, node, iog, host, hc
+        , fcport, iscsiport, nf, array, system, all]
         default: "all"
 '''
 
@@ -115,11 +115,11 @@ class IBMSVCGatherInfo(object):
         try:
             vols = self.restapi.svc_obj_info(cmd='lsvdisk', cmdopts=None,
                                              cmdargs=None)
-            self.log.info("Successfully listed d% volumes from array s%",
+            self.log.info("Successfully listed %d volumes from array %s",
                           len(vols), self.module.params['clustername'])
             return vols
         except Exception as e:
-            msg = ('Get Volumes from array s% failed with error s% ',
+            msg = ('Get Volumes from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -128,11 +128,11 @@ class IBMSVCGatherInfo(object):
         try:
             pools = self.restapi.svc_obj_info(cmd='lsmdiskgrp', cmdopts=None,
                                               cmdargs=None)
-            self.log.info('Successfully listed d% pools from array '
-                          's%', len(pools), self.module.params['clustername'])
+            self.log.info('Successfully listed %d pools from array '
+                          '%s', len(pools), self.module.params['clustername'])
             return pools
         except Exception as e:
-            msg = ('Get Pools from array s% failed with error s% ',
+            msg = ('Get Pools from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -141,11 +141,11 @@ class IBMSVCGatherInfo(object):
         try:
             nodes = self.restapi.svc_obj_info(cmd='lsnode', cmdopts=None,
                                               cmdargs=None)
-            self.log.info('Successfully listed d% pools from array s%',
+            self.log.info('Successfully listed %d pools from array %s',
                           len(nodes), self.module.params['clustername'])
             return nodes
         except Exception as e:
-            msg = ('Get Nodes from array s% failed with error s% ',
+            msg = ('Get Nodes from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -154,11 +154,11 @@ class IBMSVCGatherInfo(object):
         try:
             hosts = self.restapi.svc_obj_info(cmd='lshost', cmdopts=None,
                                               cmdargs=None)
-            self.log.info('Successfully listed d% hosts from array '
-                          's%', len(hosts), self.module.params['clustername'])
+            self.log.info('Successfully listed %d hosts from array '
+                          '%s', len(hosts), self.module.params['clustername'])
             return hosts
         except Exception as e:
-            msg = ('Get Hosts from array s% failed with error s% ',
+            msg = ('Get Hosts from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -167,11 +167,11 @@ class IBMSVCGatherInfo(object):
         try:
             iogrps = self.restapi.svc_obj_info(cmd='lsiogrp', cmdopts=None,
                                                cmdargs=None)
-            self.log.info('Successfully listed d% hosts from array '
-                          's%', len(iogrps), self.module.params['clustername'])
+            self.log.info('Successfully listed %d hosts from array '
+                          '%s', len(iogrps), self.module.params['clustername'])
             return iogrps
         except Exception as e:
-            msg = ('Get IO Groups from array s% failed with error s% ',
+            msg = ('Get IO Groups from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -180,11 +180,11 @@ class IBMSVCGatherInfo(object):
         try:
             hcs = self.restapi.svc_obj_info(cmd='lshostcluster', cmdopts=None,
                                             cmdargs=None)
-            self.log.info('Successfully listed d% host clusters from array '
-                          's%', len(hcs), self.module.params['clustername'])
+            self.log.info('Successfully listed %d host clusters from array '
+                          '%s', len(hcs), self.module.params['clustername'])
             return hcs
         except Exception as e:
-            msg = ('Get Host Cluster from array s% failed with error s% ',
+            msg = ('Get Host Cluster from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -193,11 +193,11 @@ class IBMSVCGatherInfo(object):
         try:
             fcports = self.restapi.svc_obj_info(cmd='lsportfc', cmdopts=None,
                                                 cmdargs=None)
-            self.log.info('Successfully listed d% fc ports from array s%',
+            self.log.info('Successfully listed %d fc ports from array %s',
                           len(fcports), self.module.params['clustername'])
             return fcports
         except Exception as e:
-            msg = ('Get fc ports from array s% failed with error s% ',
+            msg = ('Get fc ports from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -206,11 +206,11 @@ class IBMSVCGatherInfo(object):
         try:
             ipports = self.restapi.svc_obj_info(cmd='lsportip', cmdopts=None,
                                                 cmdargs=None)
-            self.log.info('Successfully listed d% iscsi ports from array s%',
+            self.log.info('Successfully listed %d iscsi ports from array %s',
                           len(ipports), self.module.params['clustername'])
             return ipports
         except Exception as e:
-            msg = ('Get iscsi ports from array s% failed with error s% ',
+            msg = ('Get iscsi ports from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -219,11 +219,11 @@ class IBMSVCGatherInfo(object):
         try:
             nf = self.restapi.svc_obj_info(cmd='lsnvmefabric', cmdopts=None,
                                            cmdargs=None)
-            self.log.info('Successfully listed d% nvme fabric from array s%',
+            self.log.info('Successfully listed %d nvme fabric from array %s',
                           len(nf), self.module.params['clustername'])
             return nf
         except Exception as e:
-            msg = ('Get NvMe Fabric from array s% failed with error s% ',
+            msg = ('Get NvMe Fabric from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -232,11 +232,11 @@ class IBMSVCGatherInfo(object):
         try:
             array = self.restapi.svc_obj_info(cmd='lsarray', cmdopts=None,
                                               cmdargs=None)
-            self.log.info('Successfully listed d% array info from array s%',
+            self.log.info('Successfully listed %d array info from array %s',
                           len(array), self.module.params['clustername'])
             return array
         except Exception as e:
-            msg = ('Get Array info from array s% failed with error s% ',
+            msg = ('Get Array info from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -245,11 +245,11 @@ class IBMSVCGatherInfo(object):
         try:
             system = self.restapi.svc_obj_info(cmd='lssystem', cmdopts=None,
                                                cmdargs=None)
-            self.log.info('Successfully listed d% system info from array s%',
+            self.log.info('Successfully listed %d system info from array %s',
                           len(system), self.module.params['clustername'])
             return system
         except Exception as e:
-            msg = ('Get System info from array s% failed with error s% ',
+            msg = ('Get System info from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)

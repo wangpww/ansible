@@ -22,39 +22,246 @@ description:
   list of nodes, pools, volumes, hosts, host clusters, fc ports, iscsi ports,
   io groups, nvme fabric, array, system etc.
 author:
-- Peng Wang (wangpww@cn.ibm.com)
+- Peng Wang (@wangpww)
 options:
-    state:
-        type: str
-        required: False
-        description:
-            - Returns "info"
-        default: "info"
-        choices: ['info']
-    gather_subset:
-        type: list
-        required: False
-        description:
-        - List of string variables to specify the IBM SVC entities for which
-          information is required.
-        - List of all SVC entities supported by the module
-        - vol - vdisks
-        - pool - mdiskgrps
-        - node - nodes
-        - iog - io groups
-        - host - hosts
-        - hc - host clusters
-        - fcport - fc ports
-        - iscsiport - iscsi ports
-        - nf - nvme fabric
-        - array - array MDisks info
-        - system - storage system info
-        choices: [vol, pool, node, iog, host, hc
-        , fcport, iscsiport, nf, array, system, all]
-        default: "all"
+  name:
+    description:
+    - Storage info gather.
+    required: true
+    type: str
+  state:
+    type: str
+    required: False
+    description:
+    - Returns "info"
+    default: "info"
+    choices: ['info']
+  clustername:
+    description:
+    - description
+    required: true
+    type: str
+  domain:
+    description:
+    - rest api
+    type: str
+    required: false
+  username:
+    description:
+    - rest api username
+    type: str
+    required: true
+  password:
+    description:
+    - rest api password
+    type: str
+    required: true
+  log_path:
+    description:
+    - For extra logging
+    type: str
+  validate_certs:
+    description:
+    - validate_certs
+    type: bool
+  gather_subset:
+    type: list
+    required: False
+    description:
+    - List of string variables to specify the IBM SVC entities for which
+      information is required.
+    - List of all SVC entities supported by the module
+    - vol - vdisks
+    - pool - mdiskgrps
+    - node - nodes
+    - iog - io groups
+    - host - hosts
+    - hc - host clusters
+    - fcport - fc ports
+    - iscsiport - iscsi ports
+    - nf - nvme fabric
+    - array - array MDisks info
+    - system - storage system info
+    choices: [vol, pool, node, iog, host, hc, fcport
+              , iscsiport, nf, array, system, all]
+    default: "all"
+'''
+
+EXAMPLES = r'''
+
+- name: Get array info
+    ibm_svc_info:
+      clustername: "Storage Management IP"
+      username: "admin"
+      password: "admin_password"
+      log_path: "/tmp/ansible.log"
+      state: "info"
+      gather_subset: "array"
+
+- name: Get Pool list
+    ibm_svc_info:
+      clustername: "Storage Management IP"
+      username: "admin"
+      password: "admin_password"
+      log_path: "/tmp/ansible.log"
+      state: "info"
+      gather_subset: "pool"
+
 '''
 
 RETURN = '''
+
+ok: [localhost] => {
+    "Array": [
+        {
+            "capacity": "557.8GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "0",
+            "mdisk_grp_name": "Pool0",
+            "mdisk_id": "0",
+            "mdisk_name": "mdisk0",
+            "raid_level": "raid5",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "557.8GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "1",
+            "mdisk_grp_name": "xavi_pool",
+            "mdisk_id": "1",
+            "mdisk_name": "mdisk1",
+            "raid_level": "raid5",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "557.8GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "2",
+            "mdisk_grp_name": "xavi_non_vvol_pool",
+            "mdisk_id": "2",
+            "mdisk_name": "mdisk2",
+            "raid_level": "raid5",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "557.8GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "6",
+            "mdisk_grp_name": "xavi_dr_pool",
+            "mdisk_id": "3",
+            "mdisk_name": "mdisk3",
+            "raid_level": "raid5",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "836.7GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "3",
+            "mdisk_grp_name": "xavi_gold_pool",
+            "mdisk_id": "4",
+            "mdisk_name": "mdisk4",
+            "raid_level": "raid0",
+            "raid_status": "online",
+            "redundancy": "0",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "557.8GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "7",
+            "mdisk_grp_name": "xavi_silver_pool",
+            "mdisk_id": "5",
+            "mdisk_name": "mdisk5",
+            "raid_level": "raid5",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "557.8GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "7",
+            "mdisk_grp_name": "xavi_silver_pool",
+            "mdisk_id": "6",
+            "mdisk_name": "mdisk6",
+            "raid_level": "raid5",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        },
+        {
+            "capacity": "278.9GB",
+            "distributed": "no",
+            "encrypt": "no",
+            "mdisk_grp_id": "5",
+            "mdisk_grp_name": "csi-test-pool1",
+            "mdisk_id": "7",
+            "mdisk_name": "mdisk7",
+            "raid_level": "raid1",
+            "raid_status": "online",
+            "redundancy": "1",
+            "status": "online",
+            "strip_size": "256",
+            "tier": "tier_enterprise"
+        }
+    ],
+    "FCPorts": [],
+    "HostClusters": [],
+    "Hosts": [],
+    "IOGroup": [],
+    "Nodes": [],
+    "NvMeFabric": [],
+    "Pools": [],
+    "System": [],
+    "Volumes": [],
+    "changed": false,
+    "iSCSIPorts": [],
+    "invocation": {
+        "module_args": {
+            "clustername": "9.115.241.194",
+            "domain": null,
+            "gather_subset": [
+                "array"
+            ],
+            "log_path": "/tmp/playbook.debug",
+            "name": "gather_info",
+            "password": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER",
+            "state": "info",
+            "username": "superuser",
+            "validate_certs": false
+        }
+    }
+}
+
 '''
 
 import logging

@@ -37,7 +37,7 @@ options:
         description:
         - List of string variables to specify the IBM SVC entities for which
           information is required.
-        - List of all SVC entities supported by the module -
+        - List of all SVC entities supported by the module
         - vol - vdisks
         - pool - mdiskgrps
         - node - nodes
@@ -49,8 +49,8 @@ options:
         - nf - nvme fabric
         - array - array MDisks info
         - system - storage system info
-        choices: [vol, pool, node, iog , host, hc, fcport, iscsiport,
-                  nf, array, system]
+        choices: 
+        [vol, pool, node, iog, host, hc, fcport, iscsiport, nf, array, system]
         default: "all"
 '''
 

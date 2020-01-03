@@ -20,7 +20,7 @@ version_added: "2.10"
 description:
 - Gathers the list of specified IBM SVC Storage System entities, like the
   list of nodes, pools, volumes, hosts, host clusters, fc ports, iscsi ports,
-  io groups, nvme fabric, array, system etc.
+  io groups, fc map, fc connectivity, nvme fabric, array, system etc.
 author:
 - Peng Wang (@wangpww)
 options:
@@ -79,11 +79,13 @@ options:
     - hc - host clusters
     - fcport - fc ports
     - iscsiport - iscsi ports
+    - fcmap - fc maps
+    - fc - Fc connectivity
     - nf - nvme fabric
     - array - array MDisks info
     - system - storage system info
     choices: [vol, pool, node, iog, host, hc, fcport
-              , iscsiport, nf, array, system, all]
+              , iscsiport, nf, fcmap, fc, array, system, all]
     default: "all"
 '''
 
@@ -135,8 +137,10 @@ class IBMSVCGatherInfo(object):
                                             'iog',
                                             'host',
                                             'hc',
+                                            'fc',
                                             'fcport',
                                             'iscsiport',
+                                            'fcmap',
                                             'nf',
                                             'array',
                                             'system',
@@ -243,6 +247,19 @@ class IBMSVCGatherInfo(object):
             self.log.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_fc_connectivity_list(self):
+        try:
+            fc = self.restapi.svc_obj_info(cmd='lsfabric', cmdopts=None,
+                                           cmdargs=None)
+            self.log.info('Successfully listed %d fc connectivity from array '
+                          '%s', len(fc), self.module.params['clustername'])
+            return fc
+        except Exception as e:
+            msg = ('Get FC Connectivity from array %s failed with error %s ',
+                   self.module.params['clustername'], str(e))
+            self.log.error(msg)
+            self.module.fail_json(msg=msg)
+
     def get_fc_ports_list(self):
         try:
             fcports = self.restapi.svc_obj_info(cmd='lsportfc', cmdopts=None,
@@ -265,6 +282,19 @@ class IBMSVCGatherInfo(object):
             return ipports
         except Exception as e:
             msg = ('Get iscsi ports from array %s failed with error %s ',
+                   self.module.params['clustername'], str(e))
+            self.log.error(msg)
+            self.module.fail_json(msg=msg)
+
+    def get_fc_map_list(self):
+        try:
+            fcmaps = self.restapi.svc_obj_info(cmd='lsfcmap', cmdopts=None,
+                                               cmdargs=None)
+            self.log.info('Successfully listed %d fc maps from array %s',
+                          len(fcmaps), self.module.params['clustername'])
+            return fcmaps
+        except Exception as e:
+            msg = ('Get fc maps from array %s failed with error %s ',
                    self.module.params['clustername'], str(e))
             self.log.error(msg)
             self.module.fail_json(msg=msg)
@@ -313,8 +343,8 @@ class IBMSVCGatherInfo(object):
         subset = self.module.params['gather_subset']
         if len(subset) == 0 or 'all' in subset:
             self.log.info("The default value for gather_subset is all")
-            subset = ['vol', 'pool', 'node', 'iog', 'host', 'hc', 'fcport',
-                      'iscsiport', 'nf', 'array', 'system']
+            subset = ['vol', 'pool', 'node', 'iog', 'host', 'hc', 'fc',
+                      'fcport', 'iscsiport', 'fcmap', 'nf', 'array', 'system']
 
         vol = []
         pool = []
@@ -322,8 +352,10 @@ class IBMSVCGatherInfo(object):
         iog = []
         host = []
         hc = []
+        fc = []
         fcport = []
         iscsiport = []
+        fcmap = []
         nf = []
         array = []
         system = []
@@ -340,10 +372,14 @@ class IBMSVCGatherInfo(object):
             host = self.get_hosts_list()
         if 'hc' in subset:
             hc = self.get_host_clusters_list()
+        if 'fc' in subset:
+            fc = self.get_fc_connectivity_list()
         if 'fcport' in subset:
             fcport = self.get_fc_ports_list()
         if 'iscsiport' in subset:
             iscsiport = self.get_iscsi_ports_list()
+        if 'fcmap' in subset:
+            fcmap = self.get_fc_map_list()
         if 'nf' in subset:
             nf = self.get_nvme_fabric_list()
         if 'array' in subset:
@@ -358,8 +394,10 @@ class IBMSVCGatherInfo(object):
             IOGroup=iog,
             Hosts=host,
             HostClusters=hc,
+            FCConnectivity=fc,
             FCPorts=fcport,
             iSCSIPorts=iscsiport,
+            FCMaps=fcmap,
             NvMeFabric=nf,
             Array=array,
             System=system)

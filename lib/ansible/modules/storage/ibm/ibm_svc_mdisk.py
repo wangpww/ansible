@@ -1,6 +1,6 @@
 #!/usr/bin/python
-# Copyright (C) 2018 IBM CORPORATION
-# Author(s): John Hetherington <john.hetherington@uk.ibm.com>
+# Copyright (C) 2020 IBM CORPORATION
+# Author(s): Peng Wang <wangpww@cn.ibm.com>
 #
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -15,14 +15,15 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_mdisk
-short_description: Manage mdisk commands
+short_description: Manage hosts on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
   - Ansible interface to manage mdisk related commands
 version_added: "2.10"
 options:
   name:
     description:
-      - Create mdisk name C(mdisk1).
+      - The name for the mdisk.
     required: true
     type: str
   state:
@@ -33,30 +34,30 @@ options:
     type: str
   clustername:
     description:
-      - name of host cluster
+      - The hostname or management IP of Spectrum virtualize storage system.
     type: str
     required: true
   domain:
     description:
-      - domain for IBM SVC storage
+      - domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-      - rest api username
-    type: str
+      - rest api username for IBM Spectrum Virtualize storage
     required: true
+    type: str
   password:
     description:
-      - rest api password
-    type: str
+      - rest api password for IBM Spectrum Virtualize storage
     required: true
+    type: str
   drive:
     description:
       - Drive or drives to use as members of the raid array
     type: str
   mdiskgrp:
     description:
-      - The storage pool to which you want to add the mdisk
+      - The storage pool(mdiskgrp) to which you want to add the mdisk
     type: str
     required: true
   log_path:
@@ -79,28 +80,30 @@ options:
     default: 'no'
     choices: ['yes', 'no']
 author:
-    - John Hetherington(@John)
+    - Peng Wang(@wangpww)
 '''
 EXAMPLES = '''
 - name: Create new array mdisk named mdisk20
-  mdisk:
+  ibm_svc_mdisk:
+    clustername: "{{clustername}}"
+    domain: "{{domain}}"
+    username: "{{username}}"
+    password: "{{password}}"
     name: mdisk20
     state: present
-    clustername: mcr-tb5-29-cl
-    username: superuser
-    password: letmein
     level: raid0
     drive: '5:6'
     encrypt: no
     mdiskgrp: pool20
 
 - name: Delete mdisk named mdisk20
-  mdisk:
+  ibm_svc_mdisk:
+    clustername: "{{clustername}}"
+    domain: "{{domain}}"
+    username: "{{username}}"
+    password: "{{password}}"
     name: mdisk20
     state: absent
-    clustername: mcr-tb5-29-cl
-    username: superuser
-    password: letmein
     mdiskgrp: pool20
 '''
 RETURN = '''
@@ -280,11 +283,11 @@ class IBMSVCmdisk(object):
                 if self.state == 'present':
                     if not mdisk_data:
                         self.mdisk_create()
-                        msg = "Mdisk group [%s] has been created." % self.name
+                        msg = "Mdisk [%s] has been created." % self.name
                     else:
                         # This is where we would modify
                         self.mdisk_update(modify)
-                        msg = "Mdisk group [%s] has been modified." % self.name
+                        msg = "Mdisk [%s] has been modified." % self.name
 
                 elif self.state == 'absent':
                     self.mdisk_delete()
@@ -292,9 +295,9 @@ class IBMSVCmdisk(object):
         else:
             self.debug("exiting with no changes")
             if self.state == 'absent':
-                msg = "Mdisk group [%s] did not exist." % self.name
+                msg = "Mdisk [%s] did not exist." % self.name
             else:
-                msg = "Mdisk group [%s] already exists." % self.name
+                msg = "Mdisk [%s] already exists." % self.name
 
         self.module.exit_json(msg=msg, changed=changed)
 

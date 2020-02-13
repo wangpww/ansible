@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2019 IBM CORPORATION
+# Copyright (C) 2020 IBM CORPORATION
 # Author(s): Peng Wang <wangpww@cn.ibm.com>
 #
 # GNU General Public License v3.0+
@@ -15,12 +15,14 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_info
-short_description: IBM SVC information gatherer
+short_description: This module allows you to gather various information from
+                   IBM Spectrum Virtualize.
 version_added: "2.10"
 description:
-- Gathers the list of specified IBM SVC Storage System entities, like the
-  list of nodes, pools, volumes, hosts, host clusters, fc ports, iscsi ports,
-  io groups, fc map, fc connectivity, nvme fabric, array, system etc.
+- Gathers the list of specified IBM Spectrum Virtualize Storage System
+  entities, like the list of nodes, pools, volumes, hosts, host clusters,
+  fc ports, iscsi ports, target port fc, fc consistgrp, vdiskcopy, io groups,
+  fc map, fc connectivity, nvme fabric, array, system etc.
 author:
 - Peng Wang (@wangpww)
 options:
@@ -38,24 +40,24 @@ options:
     choices: ['info']
   clustername:
     description:
-    - description
-    required: true
+    - The hostname or management IP of
+      Spectrum Virtualize storage system.
     type: str
+    required: true
   domain:
     description:
-    - rest api
+    - domain for IBM Spectrum Virtualize storage
     type: str
-    required: false
   username:
     description:
-    - rest api username
-    type: str
+    - rest api username for IBM Spectrum Virtualize storage
     required: true
+    type: str
   password:
     description:
-    - rest api password
-    type: str
+    - rest api password for IBM Spectrum Virtualize storage
     required: true
+    type: str
   log_path:
     description:
     - For extra logging
@@ -68,42 +70,51 @@ options:
     type: list
     required: False
     description:
-    - List of string variables to specify the IBM SVC entities for which
-      information is required.
-    - List of all SVC entities supported by the module
-    - vol - vdisks
-    - pool - mdiskgrps
-    - node - nodes
-    - iog - io groups
-    - host - hosts
-    - hc - host clusters
-    - fcport - fc ports
-    - iscsiport - iscsi ports
-    - fcmap - fc maps
-    - fc - Fc connectivity
-    - nf - nvme fabric
-    - array - array MDisks info
-    - system - storage system info
+    - List of string variables to specify the IBM Spectrum Virtualize entities
+      for which information is required.
+    - all - List of all IBM Spectrum Virtualize entities
+            supported by the module
+    - vol - list vdisks info
+    - pool - list mdiskgrps info
+    - node - list nodes info
+    - iog - list io groups info
+    - host - list hosts info
+    - hc - list host clusters info
+    - fc - list FC connectivity info
+    - fcport - list fc ports info
+    - targetportfc - list WWPN info required to set up FC zoning and to
+                     display the current failover status of host I/O ports.
+    - fcmap - list fc maps info
+    - fcconsistgrp - display a concise list or a detailed
+                     view of FlashCopy consistency groups
+    - iscsiport - list iscsi ports info
+    - vdiskcopy - list volume copy information
+    - nf - list nvme fabric info
+    - array - list array MDisks info
+    - system - display the storage system info
     choices: [vol, pool, node, iog, host, hc, fcport
-              , iscsiport, nf, fcmap, fc, array, system, all]
+              , iscsiport, nf, fcmap, fc, fcconsistgrp
+              , vdiskcopy, 'targetportfc', array, system, all]
     default: "all"
 '''
 
 EXAMPLES = '''
 - name: Get array info
   ibm_svc_info:
-      clustername: Storage_Management_IP
-      username: admin
-      password: admin_password
+      clustername: "{{clustername}}"
+      domain: "{{domain}}"
+      username: "{{username}}"
+      password: "{{password}}"
       log_path: /tmp/ansible.log
       state: info
       gather_subset: array
 
 - name: Get Pool list
   ibm_svc_info:
-      clustername: Storage_Management_IP
-      username: admin
-      password: admin_password
+      clustername: "{{clustername}}"
+      domain: "{{domain}}"
+      username: "{{username}}"
+      password: "{{password}}"
       log_path: /tmp/ansible.log
       state: info
       gather_subset: pool
@@ -139,9 +150,12 @@ class IBMSVCGatherInfo(object):
                                             'hc',
                                             'fc',
                                             'fcport',
+                                            'targetportfc',
                                             'iscsiport',
                                             'fcmap',
                                             'nf',
+                                            'fcconsistgrp',
+                                            'vdiskcopy',
                                             'array',
                                             'system',
                                             'all'
@@ -273,6 +287,21 @@ class IBMSVCGatherInfo(object):
             self.log.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_target_port_fc_list(self):
+        try:
+            targetportfc = self.restapi.svc_obj_info(cmd='lstargetportfc',
+                                                     cmdopts=None,
+                                                     cmdargs=None)
+            self.log.info('Successfully listed %d target port fc '
+                          'from array %s', len(targetportfc),
+                          self.module.params['clustername'])
+            return targetportfc
+        except Exception as e:
+            msg = ('Get target port fc from array %s failed with error %s ',
+                   self.module.params['clustername'], str(e))
+            self.log.error(msg)
+            self.module.fail_json(msg=msg)
+
     def get_iscsi_ports_list(self):
         try:
             ipports = self.restapi.svc_obj_info(cmd='lsportip', cmdopts=None,
@@ -338,13 +367,44 @@ class IBMSVCGatherInfo(object):
             self.log.error(msg)
             self.module.fail_json(msg=msg)
 
+    def get_fcconsistgrp_list(self):
+        try:
+            fcconsistgrp = self.restapi.svc_obj_info(cmd='lsfcconsistgrp',
+                                                     cmdopts=None,
+                                                     cmdargs=None)
+            self.log.info('Successfully listed %d fcconsistgrp info '
+                          'from array %s', len(fcconsistgrp),
+                          self.module.params['clustername'])
+            return fcconsistgrp
+        except Exception as e:
+            msg = ('Get fcconsistgrp info from array %s failed with error %s ',
+                   self.module.params['clustername'], str(e))
+            self.log.error(msg)
+            self.module.fail_json(msg=msg)
+
+    def get_vdiskcopy_list(self):
+        try:
+            vdiskcopy = self.restapi.svc_obj_info(cmd='lsvdiskcopy',
+                                                  cmdopts=None,
+                                                  cmdargs=None)
+            self.log.info('Successfully listed %d vdiskcopy info '
+                          'from array %s', len(vdiskcopy),
+                          self.module.params['clustername'])
+            return vdiskcopy
+        except Exception as e:
+            msg = ('Get vdiskcopy info from array %s failed with error %s ',
+                   self.module.params['clustername'], str(e))
+            self.log.error(msg)
+            self.module.fail_json(msg=msg)
+
     def apply(self):
 
         subset = self.module.params['gather_subset']
         if len(subset) == 0 or 'all' in subset:
             self.log.info("The default value for gather_subset is all")
             subset = ['vol', 'pool', 'node', 'iog', 'host', 'hc', 'fc',
-                      'fcport', 'iscsiport', 'fcmap', 'nf', 'array', 'system']
+                      'fcport', 'iscsiport', 'fcmap', 'nf', 'fcconsistgrp',
+                      'vdiskcopy', 'targetportfc', 'array', 'system']
 
         vol = []
         pool = []
@@ -354,9 +414,12 @@ class IBMSVCGatherInfo(object):
         hc = []
         fc = []
         fcport = []
+        targetportfc = []
         iscsiport = []
         fcmap = []
         nf = []
+        fcconsistgrp = []
+        vdiskcopy = []
         array = []
         system = []
 
@@ -374,6 +437,8 @@ class IBMSVCGatherInfo(object):
             hc = self.get_host_clusters_list()
         if 'fc' in subset:
             fc = self.get_fc_connectivity_list()
+        if 'targetportfc' in subset:
+            targetportfc = self.get_target_port_fc_list()
         if 'fcport' in subset:
             fcport = self.get_fc_ports_list()
         if 'iscsiport' in subset:
@@ -382,6 +447,10 @@ class IBMSVCGatherInfo(object):
             fcmap = self.get_fc_map_list()
         if 'nf' in subset:
             nf = self.get_nvme_fabric_list()
+        if 'fcconsistgrp' in subset:
+            fcconsistgrp = self.get_fcconsistgrp_list()
+        if 'vdiskcopy' in subset:
+            vdiskcopy = self.get_vdiskcopy_list()
         if 'array' in subset:
             array = self.get_array_list()
         if 'system' in subset:
@@ -395,7 +464,10 @@ class IBMSVCGatherInfo(object):
             Hosts=host,
             HostClusters=hc,
             FCConnectivity=fc,
+            FCConsistgrp=fcconsistgrp,
+            VdiskCopy=vdiskcopy,
             FCPorts=fcport,
+            TargetPortFC=targetportfc,
             iSCSIPorts=iscsiport,
             FCMaps=fcmap,
             NvMeFabric=nf,

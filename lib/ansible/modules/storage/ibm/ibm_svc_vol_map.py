@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2019 IBM CORPORATION
-# Author(s): Chun Yao <chunyao@cn.ibm.com>
+# Copyright (C) 2020 IBM CORPORATION
+# Author(s): Peng Wang <wangpww@cn.ibm.com>
 #
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -17,46 +17,48 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_vol_map
-short_description: Manage vdisk commands
+short_description: Manage vdisk mapping on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
-  - Ansible interface to managing vdisk commands mkvdisk, chvdisk, rmvdisk
+  - Ansible interface to managing vdisk mapping commands mkvdiskhostmap, rmvdiskhostmap
 version_added: "2.10"
 options:
   volname:
     description:
-      - vdisk name C(volname).
+      - vdisk name.
     required: true
     type: str
   host:
     description:
-      - host name H(host).
+      - host name.
     required: true
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) a vdisk group.
+      - Whether to create (C(present)), or remove (C(absent)) a vdisk mapping.
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-      - description
-    required: true
+      - The hostname or management IP of
+        Spectrum Virtualize storage system.
     type: str
+    required: true
   domain:
     description:
-    - rest api
+      - domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-    - rest api username
-    type: str
+      - rest api username for IBM Spectrum Virtualize storage
     required: true
+    type: str
   password:
     description:
-    - rest api password
-    type: str
+      - rest api password for IBM Spectrum Virtualize storage
     required: true
+    type: str
   log_path:
     description:
     - For extra logging
@@ -66,16 +68,16 @@ options:
     - validate_certs
     type: bool
 author:
-    - Chun Yao(@Chunyao)
+    - Peng Wang(@wangpww)
 '''
 
 EXAMPLES = '''
 - name: map volume to host
   ibm_svc_vol_map:
-        clustername: mcr-tb5-cluster-03
-        domain: stglab.manchester.uk.ibm.com
-        username: superuser
-        password: passw0rd
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
         log_path: /tmp/playbook.debug
         volname: volume0
         host: host4test
@@ -83,10 +85,10 @@ EXAMPLES = '''
 
 - name: unmap volume from host
   ibm_svc_vol_map:
-        clustername: mcr-tb5-cluster-03
-        domain: stglab.manchester.uk.ibm.com
-        username: superuser
-        password: passw0rd
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
         log_path: /tmp/playbook.debug
         volname: volume0
         host: host4test

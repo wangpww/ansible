@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2019 IBM CORPORATION
-# Author(s): Chun Yao <chunyao@cn.ibm.com>
+# Copyright (C) 2020 IBM CORPORATION
+# Author(s): Peng Wang <wangpww@cn.ibm.com>
 #
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -17,7 +17,8 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_host
-short_description: Manage host commands
+short_description: Handles hosts on IBM Spectrum Virtualize
+                   Family storage systems.
 version_added: "2.10"
 
 description:
@@ -26,7 +27,7 @@ description:
 options:
     name:
         description:
-            - host name H(host).
+            - Specifies a name or label for the new host object.
         required: true
         type: str
     state:
@@ -37,48 +38,53 @@ options:
         type: str
     clustername:
         description:
-            - clustername for IBM SVC storage
+            - The hostname or management IP of
+              Spectrum Virtualize storage system.
         type: str
         required: true
     domain:
         description:
-            - domain for IBM SVC storage
+            - domain for IBM Spectrum Virtualize storage
         type: str
     username:
         description:
-            - rest api username
+            - rest api username for IBM Spectrum Virtualize storage
         required: true
         type: str
     password:
         description:
-            - rest api password
+            - rest api password for IBM Spectrum Virtualize storage
         required: true
         type: str
     fcwwpn:
         description:
-            - fcwwpn for this host
+            - List of Initiator WWN to be added to the host
         required: false
         type: str
     iscsiname:
         description:
-            - iscsiname
+            - Initiator IQN to be added to the host
         required: false
         type: str
     iogrp:
         description:
             - iogrp
         default: '0:1:2:3'
+        required: false
         type: str
     protocol:
         description:
-            - Protocol.
+            - Specifies the protocol used by the host to
+              communicate with the storage system.
         default: 'scsi'
         type: str
-        choices: [ "scsi", "nvme", "iscsi" ]
+        required: false
+        choices: [ "scsi", "nvme" ]
     type:
         description:
-            - This is host type
+            - Specifies the type of host
         default:
+        required: false
         type: str
     log_path:
         description:
@@ -89,31 +95,42 @@ options:
             - validate_certs
         type: bool
 author:
-    - Chun Yao (@chunyao)
+    - Peng Wang (@wangpww)
 '''
 
 EXAMPLES = '''
-- name: Define a new host
+- name: Define a new iscsi host
   ibm_svc_host:
-        clustername: mcr-tb5-cluster-03
-        domain: stglab.manchester.uk.ibm.com
-        username: superuser
-        password: passw0rd
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
         log_path: /tmp/playbook.debug
         name: host4test
         state: present
-        fcwwpn: 100000109B570216
         iscsiname: iqn.1994-05.com.redhat:2e358e438b8a
         iogrp: 0:1:2:3
         protocol: scsi
         type: generic
-
+- name: Define a new fc host
+  ibm_svc_host:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        log_path: /tmp/playbook.debug
+        name: host4test
+        state: present
+        fcwwpn: 100000109B570216
+        iogrp: 0:1:2:3
+        protocol: fc
+        type: generic
 - name: Delete host
   ibm_svc_host:
-        clustername: mcr-tb5-cluster-03
-        domain: stglab.manchester.uk.ibm.com
-        username: superuser
-        password: passw0rd
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
         log_path: /tmp/playbook.debug
         name: host4test
         state: absent
@@ -141,10 +158,10 @@ class IBMSVChost(object):
                                                                'present']),
                 fcwwpn=dict(type='str', required=False),
                 iscsiname=dict(type='str', required=False),
-                iogrp=dict(type='str', default='0:1:2:3'),
-                protocol=dict(type='str', default='scsi', choices=['scsi',
-                                                                   'nvme',
-                                                                   'iscsi']),
+                iogrp=dict(type='str', required=False, default='0:1:2:3'),
+                protocol=dict(type='str', required=False,
+                              default='scsi',
+                              choices=['scsi', 'nvme']),
                 type=dict(type='str')
             )
         )

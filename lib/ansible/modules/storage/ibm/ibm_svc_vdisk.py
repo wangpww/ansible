@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2019 IBM CORPORATION
-# Author(s): Jamie Jordan <jamie.jordan@ibm.com>
+# Copyright (C) 2020 IBM CORPORATION
+# Author(s): Peng Wang <wangpww@cn.ibm.com>
 #
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -17,7 +17,8 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_vdisk
-short_description: Manage vdisk commands
+short_description: Manage vdisk on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
   - Ansible interface to managing vdisk commands mkvdisk, chvdisk, rmvdisk
 version_added: "2.10"
@@ -29,29 +30,30 @@ options:
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) a vdisk group.
+      - Whether to create (C(present)), or remove (C(absent)) a vdisk.
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-      - description
-    required: true
+    - The hostname or management IP of
+      Spectrum Virtualize storage system.
     type: str
+    required: true
   domain:
     description:
-    - rest api
+    - domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-    - rest api username
-    type: str
+    - rest api username for IBM Spectrum Virtualize storage
     required: true
+    type: str
   password:
     description:
-    - rest api password
-    type: str
+    - rest api password for IBM Spectrum Virtualize storage
     required: true
+    type: str
   mdiskgrp:
     description:
     - Specify pool for adding the vdisk to by name or ID
@@ -81,33 +83,33 @@ options:
     - For extra logging
     type: str
 author:
-    - Jamie Jordan(@Jamie)
+    - Peng Wang(@wangpww)
 '''
 
 EXAMPLES = '''
 - name: execute mkvdisk
   ibm_svc_vdisk:
-        clustername: mcr-tb5-cluster-03
-        domain: stglab.manchester.uk.ibm.com
-        username: superuser
-        password: passw0rd
-        log_path: /tmp/playbook.debug
-        name: volume0
-        state: present
-        mdiskgrp: 0
-        easytier: 'off'
-        size: "4294967296"
-        unit: b
+    clustername: "{{clustername}}"
+    domain: "{{domain}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    log_path: /tmp/playbook.debug
+    name: volume0
+    state: present
+    mdiskgrp: 0
+    easytier: 'off'
+    size: "4294967296"
+    unit: b
 
 - name: execute rmvdisk
   ibm_svc_vdisk:
-        clustername: mcr-tb5-cluster-03
-        domain: stglab.manchester.uk.ibm.com
-        username: superuser
-        password: passw0rd
-        log_path: /tmp/playbook.debug
-        name: volume0
-        state: absent
+    clustername: mcr-fab3-04
+    domain:
+    username: superuser
+    password: letmein
+    log_path: /tmp/playbook.debug
+    name: volume0
+    state: absent
 '''
 RETURN = '''
 '''

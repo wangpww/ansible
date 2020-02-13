@@ -1,6 +1,6 @@
 #!/usr/bin/python
-# Copyright (C) 2018 IBM CORPORATION
-# Author(s): John Hetherington <john.hetherington@uk.ibm.com>
+# Copyright (C) 2020 IBM CORPORATION
+# Author(s): Peng Wang <wangpww@cn.ibm.com>
 #
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -15,7 +15,8 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_mdiskgrp
-short_description: Manage mdiskgrp commands
+short_description: Manage mdiskgrp on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
   - Ansible interface to managing mdiskgrp commands
     mkmdiskgrp, chmdiskgrp, rmmdiskgrp
@@ -34,23 +35,24 @@ options:
     type: str
   clustername:
     description:
-      - description
-    required: true
+    - The hostname or management IP of
+      Spectrum virtualize storage system.
     type: str
+    required: true
   domain:
     description:
-    - rest api
+    - domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-    - rest api username
-    type: str
+    - rest api username for IBM Spectrum Virtualize storage
     required: true
+    type: str
   password:
     description:
-    - rest api password
-    type: str
+    - rest api password for IBM Spectrum Virtualize storage
     required: true
+    type: str
   datareduction:
     description:
     - Define whether to use data reduction pools on the mdisk group
@@ -94,30 +96,31 @@ options:
       - size for sub pool
     type: int
 author:
-    - John Hetherington(@John)
+    - Peng Wang(@wangpww)
 '''
 EXAMPLES = '''
 - name: Create new mdiskgrp named pool1
-  mdiskgrp:
+  ibm_svc_mdiskgrp:
+    clustername: "{{clustername}}"
+    domain: "{{domain}}"
+    username: "{{username}}"
+    password: "{{password}}"
     name: pool1
     state: present
-    clustername: mcr-fab3-04
-    domain:
-    username: superuser
-    password: letmein
     datareduction: no
     easytier: auto
     encrypt: no
     ext: 1024
 
 - name: Delete mdiskgrp named pool1
-  mdiskgrp:
+  ibm_svc_mdiskgrp:
+    clustername: "{{clustername}}"
+    domain: "{{domain}}"
+    username: "{{username}}"
+    password: "{{password}}"
     name: pool1
     state: absent
-    clustername: mcr-fab3-04
-    domain:
-    username: superuser
-    password: letmein
+
 '''
 RETURN = '''
 '''

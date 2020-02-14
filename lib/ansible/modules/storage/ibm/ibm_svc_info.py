@@ -16,7 +16,7 @@ DOCUMENTATION = '''
 ---
 module: ibm_svc_info
 short_description: This module allows you to gather various information from
-                   IBM Spectrum Virtualize.
+                   IBM Spectrum Virtualize storage systems
 version_added: "2.10"
 description:
 - Gathers the list of specified IBM Spectrum Virtualize Storage System
@@ -28,7 +28,7 @@ author:
 options:
   name:
     description:
-    - Storage info gather.
+    - Storage info gather
     required: true
     type: str
   state:
@@ -41,26 +41,26 @@ options:
   clustername:
     description:
     - The hostname or management IP of
-      Spectrum Virtualize storage system.
+      Spectrum Virtualize storage
     type: str
     required: true
   domain:
     description:
-    - domain for IBM Spectrum Virtualize storage
+    - Domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-    - rest api username for IBM Spectrum Virtualize storage
+    - REST API username for IBM Spectrum Virtualize storage
     required: true
     type: str
   password:
     description:
-    - rest api password for IBM Spectrum Virtualize storage
+    - REST API password for IBM Spectrum Virtualize storage
     required: true
     type: str
   log_path:
     description:
-    - For extra logging
+    - Debug log of this file
     type: str
   validate_certs:
     description:
@@ -83,7 +83,7 @@ options:
     - fc - list FC connectivity info
     - fcport - list fc ports info
     - targetportfc - list WWPN info required to set up FC zoning and to
-                     display the current failover status of host I/O ports.
+                     display the current failover status of host I/O ports
     - fcmap - list fc maps info
     - fcconsistgrp - display a concise list or a detailed
                      view of FlashCopy consistency groups

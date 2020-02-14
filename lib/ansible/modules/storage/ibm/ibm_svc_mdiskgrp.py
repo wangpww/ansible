@@ -15,42 +15,40 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_mdiskgrp
-short_description: Manage mdiskgrp on IBM Spectrum Virtualize
-                   Family storage systems.
+short_description: Manage pool on IBM Spectrum Virtualize
+                   Family storage systems
 description:
-  - Ansible interface to managing mdiskgrp commands
-    mkmdiskgrp, chmdiskgrp, rmmdiskgrp
+  - Ansible interface to manage pool commands mkmdiskgrp, rmmdiskgrp
 version_added: "2.10"
 options:
   name:
     description:
-      - Mdisk group name C(pool).
+      - Specifies a name to assign to the new pool
     required: true
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) an mdisk group.
+      - Whether to create (C(present)), or remove (C(absent)) an mdisk group
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-    - The hostname or management IP of
-      Spectrum virtualize storage system.
+    - The hostname or management IP of Spectrum Virtualize storage
     type: str
     required: true
   domain:
     description:
-    - domain for IBM Spectrum Virtualize storage
+    - Domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-    - rest api username for IBM Spectrum Virtualize storage
+    - REST API username for IBM Spectrum Virtualize storage
     required: true
     type: str
   password:
     description:
-    - rest api password for IBM Spectrum Virtualize storage
+    - REST API password for IBM Spectrum Virtualize storage
     required: true
     type: str
   datareduction:
@@ -77,7 +75,7 @@ options:
     type: int
   log_path:
     description:
-    - For extra logging
+    - Debug log of this file
     type: str
   validate_certs:
     description:

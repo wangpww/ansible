@@ -17,41 +17,40 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_vdisk
-short_description: Manage vdisk on IBM Spectrum Virtualize
-                   Family storage systems.
+short_description: Manage volume on IBM Spectrum Virtualize
+                   Family storage systems
 description:
-  - Ansible interface to managing vdisk commands mkvdisk, chvdisk, rmvdisk
+  - Ansible interface to manage volume commands mkvdisk, rmvdisk
 version_added: "2.10"
 options:
   name:
     description:
-      - vdisk name C(volume).
+      - Specifies a name to assign to the new volume
     required: true
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) a vdisk.
+      - Whether to create (C(present)), or remove (C(absent)) a volume
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-    - The hostname or management IP of
-      Spectrum Virtualize storage system.
+    - The hostname or management IP of Spectrum Virtualize storage
     type: str
     required: true
   domain:
     description:
-    - domain for IBM Spectrum Virtualize storage
+    - Domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-    - rest api username for IBM Spectrum Virtualize storage
+    - REST API username for IBM Spectrum Virtualize storage
     required: true
     type: str
   password:
     description:
-    - rest api password for IBM Spectrum Virtualize storage
+    - REST API password for IBM Spectrum Virtualize storage
     required: true
     type: str
   mdiskgrp:
@@ -70,7 +69,7 @@ options:
     type: str
   unit:
     description:
-    - Define unit of storage for the size option.
+    - Define unit of storage for the size option
     type: str
     choices: [ b, kb, mb, gb, tb, pb ]
     default: mb
@@ -80,7 +79,7 @@ options:
     type: bool
   log_path:
     description:
-    - For extra logging
+    - Debug log of this file
     type: str
 author:
     - Peng Wang(@wangpww)

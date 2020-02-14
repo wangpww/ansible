@@ -17,51 +17,52 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_vol_map
-short_description: Manage vdisk mapping on IBM Spectrum Virtualize
-                   Family storage systems.
+short_description: Manage volume mapping on IBM Spectrum Virtualize
+                   Family storage systems
 description:
-  - Ansible interface to managing vdisk mapping commands mkvdiskhostmap, rmvdiskhostmap
+  - Ansible interface to manage volume mapping commands
+    mkvdiskhostmap, rmvdiskhostmap
 version_added: "2.10"
 options:
   volname:
     description:
-      - vdisk name.
+      - Specifies the name of the volume that you want to map to the host
     required: true
     type: str
   host:
     description:
-      - host name.
+      - Specifies the host name to map the volume
     required: true
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) a vdisk mapping.
+      - Whether to create (C(present)), or remove (C(absent)) a volume mapping
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
       - The hostname or management IP of
-        Spectrum Virtualize storage system.
+        Spectrum Virtualize storage
     type: str
     required: true
   domain:
     description:
-      - domain for IBM Spectrum Virtualize storage
+      - Domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-      - rest api username for IBM Spectrum Virtualize storage
+      - REST API username for IBM Spectrum Virtualize storage
     required: true
     type: str
   password:
     description:
-      - rest api password for IBM Spectrum Virtualize storage
+      - REST API password for IBM Spectrum Virtualize storage
     required: true
     type: str
   log_path:
     description:
-    - For extra logging
+    - Debug log of this file
     type: str
   validate_certs:
     description:

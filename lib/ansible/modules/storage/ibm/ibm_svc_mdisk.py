@@ -15,40 +15,40 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_mdisk
-short_description: Manage hosts on IBM Spectrum Virtualize
-                   Family storage systems.
+short_description: Manage mdisk on IBM Spectrum Virtualize
+                   Family storage systems
 description:
   - Ansible interface to manage mdisk related commands
 version_added: "2.10"
 options:
   name:
     description:
-      - The name for the mdisk.
+      - The name for the mdisk
     required: true
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) the mdisk.
+      - Whether to create (C(present)), or remove (C(absent)) the mdisk
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-      - The hostname or management IP of Spectrum virtualize storage system.
+      - The hostname or management IP of Spectrum Virtualize storage
     type: str
     required: true
   domain:
     description:
-      - domain for IBM Spectrum Virtualize storage
+      - Domain for IBM Spectrum Virtualize storage
     type: str
   username:
     description:
-      - rest api username for IBM Spectrum Virtualize storage
+      - REST API username for IBM Spectrum Virtualize storage
     required: true
     type: str
   password:
     description:
-      - rest api password for IBM Spectrum Virtualize storage
+      - REST API password for IBM Spectrum Virtualize storage
     required: true
     type: str
   drive:
@@ -62,7 +62,7 @@ options:
     required: true
   log_path:
     description:
-      - Debug logging to this file
+      - Debug log of this file
     type: str
   validate_certs:
     description:

@@ -17,43 +17,43 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_host
-short_description: Handles hosts on IBM Spectrum Virtualize
-                   Family storage systems.
+short_description: Manage hosts on IBM Spectrum Virtualize
+                   Family storage systems
 version_added: "2.10"
 
 description:
-  - Ansible interface to managing host commands mkhost, chhost, rmhost
+  - Ansible interface to manage host commands mkhost, rmhost
 
 options:
     name:
         description:
-            - Specifies a name or label for the new host object.
+            - Specifies a name or label for the new host object
         required: true
         type: str
     state:
         description:
-            - Whether to create (H(present)), or remove (H(absent)) a host.
+            - Whether to create (C(present)), or remove (C(absent)) a host
         choices: [ absent, present ]
         required: true
         type: str
     clustername:
         description:
             - The hostname or management IP of
-              Spectrum Virtualize storage system.
+              Spectrum Virtualize storage
         type: str
         required: true
     domain:
         description:
-            - domain for IBM Spectrum Virtualize storage
+            - Domain for IBM Spectrum Virtualize storage
         type: str
     username:
         description:
-            - rest api username for IBM Spectrum Virtualize storage
+            - REST API username for IBM Spectrum Virtualize storage
         required: true
         type: str
     password:
         description:
-            - rest api password for IBM Spectrum Virtualize storage
+            - REST API password for IBM Spectrum Virtualize storage
         required: true
         type: str
     fcwwpn:
@@ -68,14 +68,15 @@ options:
         type: str
     iogrp:
         description:
-            - iogrp
+            - Specifies a set of one or more input/output (I/O)
+              groups that the host can access the volumes from
         default: '0:1:2:3'
         required: false
         type: str
     protocol:
         description:
             - Specifies the protocol used by the host to
-              communicate with the storage system.
+              communicate with the storage system
         default: 'scsi'
         type: str
         required: false
@@ -88,7 +89,7 @@ options:
         type: str
     log_path:
         description:
-            - For extra logging
+            - Debug log of this file
         type: str
     validate_certs:
         description:

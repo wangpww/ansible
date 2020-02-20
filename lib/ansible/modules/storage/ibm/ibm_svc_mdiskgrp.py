@@ -71,7 +71,7 @@ options:
     choices: ['yes', 'no']
   ext:
     description:
-    - Group size
+    - Specifies the size of the extents for this group in MB.
     type: int
   log_path:
     description:
@@ -91,7 +91,8 @@ options:
     type: str
   size:
     description:
-      - size for sub pool
+      - Specifies the child pool capacity. The value must be
+        a numeric value (and an integer multiple of the extent size)
     type: int
 author:
     - Peng Wang(@wangpww)
@@ -208,6 +209,8 @@ class IBMSVCmdiskgrp(object):
         cmd = 'mkmdiskgrp'
         cmdopts = {}
 
+        if not self.ext:
+            self.module.fail_json(msg="You must pass the ext to the module.")
         if self.parentmdiskgrp:
             cmdopts['parentmdiskgrp'] = self.parentmdiskgrp
             if self.size:

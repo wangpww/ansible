@@ -102,10 +102,10 @@ EXAMPLES = '''
 
 - name: execute rmvdisk
   ibm_svc_vdisk:
-    clustername: mcr-fab3-04
-    domain:
-    username: superuser
-    password: letmein
+    clustername: "{{clustername}}"
+    domain: "{{domain}}"
+    username: "{{username}}"
+    password: "{{password}}"
     log_path: /tmp/playbook.debug
     name: volume0
     state: absent

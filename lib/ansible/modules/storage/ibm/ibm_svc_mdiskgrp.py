@@ -71,7 +71,7 @@ options:
     choices: ['yes', 'no']
   ext:
     description:
-    - Specifies the size of the extents for this group in MB.
+    - Specifies the size of the extents for this group in MB
     type: int
   log_path:
     description:

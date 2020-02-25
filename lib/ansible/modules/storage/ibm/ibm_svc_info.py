@@ -15,20 +15,21 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_info
-short_description: This module allows you to gather various information from
-                   IBM Spectrum Virtualize storage systems
+short_description: This module gathers various information from the
+                   IBM Spectrum Virtualize storage systems.
 version_added: "2.10"
 description:
-- Gathers the list of specified IBM Spectrum Virtualize Storage System
-  entities, like the list of nodes, pools, volumes, hosts, host clusters,
-  fc ports, iscsi ports, target port fc, fc consistgrp, vdiskcopy, io groups,
-  fc map, fc connectivity, nvme fabric, array, system etc.
+- Gathers the list of specified IBM Spectrum Virtualize storage system
+  entities. These include the list of nodes, pools, volumes, hosts,
+  host clusters, FC ports, iSCSI ports, target port FC, FC consistgrp,
+  vdiskcopy, I/O groups, FC map, FC connectivity, NVMe fabric,
+  array, and system.
 author:
 - Peng Wang (@wangpww)
 options:
   name:
     description:
-    - Storage info gather
+    - Collects storage information
     required: true
     type: str
   state:
@@ -46,21 +47,21 @@ options:
     required: true
   domain:
     description:
-    - Domain for IBM Spectrum Virtualize storage
+    - Domain for IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-    - REST API username for IBM Spectrum Virtualize storage
+    - REST API username for IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-    - REST API password for IBM Spectrum Virtualize storage
+    - REST API password for IBM Spectrum Virtualize storage system
     required: true
     type: str
   log_path:
     description:
-    - Debug log of this file
+    - Debugs log for this file
     type: str
   validate_certs:
     description:
@@ -74,24 +75,25 @@ options:
       for which information is required.
     - all - List of all IBM Spectrum Virtualize entities
             supported by the module
-    - vol - list vdisks info
-    - pool - list mdiskgrps info
-    - node - list nodes info
-    - iog - list io groups info
-    - host - list hosts info
-    - hc - list host clusters info
-    - fc - list FC connectivity info
-    - fcport - list fc ports info
-    - targetportfc - list WWPN info required to set up FC zoning and to
-                     display the current failover status of host I/O ports
-    - fcmap - list fc maps info
-    - fcconsistgrp - display a concise list or a detailed
+    - vol - lists information for VDisks
+    - pool - lists information for mdiskgrps
+    - node - lists information for nodes
+    - iog - lists information for I/O groups
+    - host - lists information for hosts
+    - hc - lists information for host clusters
+    - fc - lists information for FC connectivity
+    - fcport - lists information for FC ports
+    - targetportfc - lists information for WWPN which is required to set up
+                     FC zoning and to display the current failover status
+                     of host I/O ports
+    - fcmap - lists information for FC maps info
+    - fcconsistgrp - displays a concise list or a detailed
                      view of FlashCopy consistency groups
-    - iscsiport - list iscsi ports info
-    - vdiskcopy - list volume copy information
-    - nf - list nvme fabric info
-    - array - list array MDisks info
-    - system - display the storage system info
+    - iscsiport - lists information for iSCSI ports
+    - vdiskcopy - lists information for volume copy
+    - nf - lists information for NVMe fabric
+    - array - lists information for array MDisks
+    - system - displays the storage system information
     choices: [vol, pool, node, iog, host, hc, fcport
               , iscsiport, nf, fcmap, fc, fcconsistgrp
               , vdiskcopy, 'targetportfc', array, system, all]
@@ -99,25 +101,39 @@ options:
 '''
 
 EXAMPLES = '''
-- name: Get array info
-  ibm_svc_info:
-      clustername: "{{clustername}}"
-      domain: "{{domain}}"
-      username: "{{username}}"
-      password: "{{password}}"
-      log_path: /tmp/ansible.log
-      state: info
-      gather_subset: array
+- name: Using IBM Spectrum Virtualize collection to gather storage info
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Get volume info
+      ibm_svc_info:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        log_path: /tmp/ansible.log
+        state: info
+        gather_subset: vol
 
-- name: Get Pool list
-  ibm_svc_info:
-      clustername: "{{clustername}}"
-      domain: "{{domain}}"
-      username: "{{username}}"
-      password: "{{password}}"
-      log_path: /tmp/ansible.log
-      state: info
-      gather_subset: pool
+- name: Using IBM Spectrum Virtualize collection to gather storage info
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Get pool info
+      ibm_svc_info:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        log_path: /tmp/ansible.log
+        state: info
+        gather_subset: pool
 
 '''
 

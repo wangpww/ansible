@@ -15,54 +15,54 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_mdisk
-short_description: Manage mdisk on IBM Spectrum Virtualize
-                   Family storage systems
+short_description: This module manages MDisks on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
-  - Ansible interface to manage mdisk related commands
+  - Ansible interface to manage MDisk related commands
 version_added: "2.10"
 options:
   name:
     description:
-      - The name for the mdisk
+      - The MDisk name
     required: true
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) the mdisk
+      - Creates (C(present)) or removes (C(absent)) the MDisk
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-      - The hostname or management IP of Spectrum Virtualize storage
+      - The hostname or management IP of the Spectrum Virtualize storage system.
     type: str
     required: true
   domain:
     description:
-      - Domain for IBM Spectrum Virtualize storage
+      - Domain for IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-      - REST API username for IBM Spectrum Virtualize storage
+      - REST API username for IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-      - REST API password for IBM Spectrum Virtualize storage
+      - REST API password for IBM Spectrum Virtualize storage system
     required: true
     type: str
   drive:
     description:
-      - Drive or drives to use as members of the raid array
+      - Drive(s) to use as members of the RAID array
     type: str
   mdiskgrp:
     description:
-      - The storage pool(mdiskgrp) to which you want to add the mdisk
+      - The storage pool(mdiskgrp) to which you want to add the MDisk
     type: str
     required: true
   log_path:
     description:
-      - Debug log of this file
+      - Debugs log for this file
     type: str
   validate_certs:
     description:
@@ -83,28 +83,42 @@ author:
     - Peng Wang(@wangpww)
 '''
 EXAMPLES = '''
-- name: Create new array mdisk named mdisk20
-  ibm_svc_mdisk:
-    clustername: "{{clustername}}"
-    domain: "{{domain}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    name: mdisk20
-    state: present
-    level: raid0
-    drive: '5:6'
-    encrypt: no
-    mdiskgrp: pool20
+- name: Using IBM Spectrum Virtualize collection to create new array mdisk
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Create mdisk and named mdisk20
+      ibm_svc_mdisk:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        name: mdisk20
+        state: present
+        level: raid0
+        drive: '5:6'
+        encrypt: no
+        mdiskgrp: pool20
 
-- name: Delete mdisk named mdisk20
-  ibm_svc_mdisk:
-    clustername: "{{clustername}}"
-    domain: "{{domain}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    name: mdisk20
-    state: absent
-    mdiskgrp: pool20
+- name: Using IBM Spectrum Virtualize collection to delete array mdisk
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Delete mdisk named mdisk20
+      ibm_svc_mdisk:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        name: mdisk20
+        state: absent
+        mdiskgrp: pool20
 '''
 RETURN = '''
 '''

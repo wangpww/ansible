@@ -15,10 +15,10 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = '''
 ---
 module: ibm_svc_mdiskgrp
-short_description: Manage pool on IBM Spectrum Virtualize
-                   Family storage systems
+short_description: This module manages pools on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
-  - Ansible interface to manage pool commands mkmdiskgrp, rmmdiskgrp
+  - Ansible interface to manage 'mkmdiskgrp' and 'rmmdiskgrp' pool commands.
 version_added: "2.10"
 options:
   name:
@@ -28,44 +28,44 @@ options:
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) an mdisk group
+      - Creates (C(present)) or removes (C(absent)) an MDisk group
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-    - The hostname or management IP of Spectrum Virtualize storage
+    - The hostname or management IP of the Spectrum Virtualize storage system.
     type: str
     required: true
   domain:
     description:
-    - Domain for IBM Spectrum Virtualize storage
+    - Domain for the IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-    - REST API username for IBM Spectrum Virtualize storage
+    - REST API username for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-    - REST API password for IBM Spectrum Virtualize storage
+    - REST API password for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   datareduction:
     description:
-    - Define whether to use data reduction pools on the mdisk group
+    - Defines use of data reduction pools (DRPs) on the MDisk group
     type: str
     default: 'no'
     choices: ['yes', 'no']
   easytier:
     description:
-    - Define whether to use easyier with the mdisk group
+    - Defines use of easytier with the MDisk group
     type: str
     default: 'off'
     choices: ['on', 'off', 'auto']
   encrypt:
     description:
-    - Define whether to use encryption with the mdisk group
+    - Defines use of encryption with the MDisk group
     type: str
     default: 'no'
     choices: ['yes', 'no']
@@ -75,7 +75,7 @@ options:
     type: int
   log_path:
     description:
-    - Debug log of this file
+    - Debugs log for this file
     type: str
   validate_certs:
     description:
@@ -83,11 +83,11 @@ options:
     type: bool
   parentmdiskgrp:
     description:
-      - parentmdiskgrp for sub pool
+      - parentmdiskgrp for subpool
     type: str
   unit:
     description:
-      - unit for sub pool
+      - unit for subpool
     type: str
   size:
     description:
@@ -98,27 +98,41 @@ author:
     - Peng Wang(@wangpww)
 '''
 EXAMPLES = '''
-- name: Create new mdiskgrp named pool1
-  ibm_svc_mdiskgrp:
-    clustername: "{{clustername}}"
-    domain: "{{domain}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    name: pool1
-    state: present
-    datareduction: no
-    easytier: auto
-    encrypt: no
-    ext: 1024
+- name: Using IBM Spectrum Virtualize collection to create pool
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: make mdisk group
+      ibm_svc_mdiskgrp:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        name: pool1
+        state: present
+        datareduction: no
+        easytier: auto
+        encrypt: no
+        ext: 1024
 
-- name: Delete mdiskgrp named pool1
-  ibm_svc_mdiskgrp:
-    clustername: "{{clustername}}"
-    domain: "{{domain}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    name: pool1
-    state: absent
+- name: Using IBM Spectrum Virtualize collection to delete pool
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: make mdisk group
+      ibm_svc_mdiskgrp:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        name: pool1
+        state: absent
 
 '''
 RETURN = '''

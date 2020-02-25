@@ -17,12 +17,12 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_host
-short_description: Manage hosts on IBM Spectrum Virtualize
-                   Family storage systems
+short_description: This module manages hosts on IBM Spectrum Virtualize
+                   Family storage systems.
 version_added: "2.10"
 
 description:
-  - Ansible interface to manage host commands mkhost, rmhost
+  - Ansible interface to manage host commands mkhost and rmhost
 
 options:
     name:
@@ -32,7 +32,7 @@ options:
         type: str
     state:
         description:
-            - Whether to create (C(present)), or remove (C(absent)) a host
+            - Creates (C(present)) or removes (C(absent)) a host
         choices: [ absent, present ]
         required: true
         type: str
@@ -44,16 +44,16 @@ options:
         required: true
     domain:
         description:
-            - Domain for IBM Spectrum Virtualize storage
+            - Domain for IBM Spectrum Virtualize storage system
         type: str
     username:
         description:
-            - REST API username for IBM Spectrum Virtualize storage
+            - REST API username for IBM Spectrum Virtualize storage system
         required: true
         type: str
     password:
         description:
-            - REST API password for IBM Spectrum Virtualize storage
+            - REST API password for IBM Spectrum Virtualize storage system
         required: true
         type: str
     fcwwpn:
@@ -89,7 +89,7 @@ options:
         type: str
     log_path:
         description:
-            - Debug log of this file
+            - Debugs log for this file
         type: str
     validate_certs:
         description:
@@ -100,8 +100,15 @@ author:
 '''
 
 EXAMPLES = '''
-- name: Define a new iscsi host
-  ibm_svc_host:
+- name: Using IBM Spectrum Virtualize collection to create host
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Define a new iscsi host
+      ibm_svc_host:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
         username: "{{username}}"
@@ -113,8 +120,16 @@ EXAMPLES = '''
         iogrp: 0:1:2:3
         protocol: scsi
         type: generic
-- name: Define a new fc host
-  ibm_svc_host:
+
+- name: Using IBM Spectrum Virtualize collection to create host
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Define a new fc host
+      ibm_svc_host:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
         username: "{{username}}"
@@ -126,8 +141,16 @@ EXAMPLES = '''
         iogrp: 0:1:2:3
         protocol: fc
         type: generic
-- name: Delete host
-  ibm_svc_host:
+
+- name: Using IBM Spectrum Virtualize collection to delete host
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Delete host
+      ibm_svc_host:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
         username: "{{username}}"

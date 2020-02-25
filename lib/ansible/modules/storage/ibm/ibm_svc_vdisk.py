@@ -17,10 +17,10 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_vdisk
-short_description: Manage volume on IBM Spectrum Virtualize
-                   Family storage systems
+short_description: This module manages volumes on IBM Spectrum Virtualize
+                   Family storage systems.
 description:
-  - Ansible interface to manage volume commands mkvdisk, rmvdisk
+  - Ansible interface to manage 'mkvdisk' and 'rmvdisk' volume commands.
 version_added: "2.10"
 options:
   name:
@@ -30,46 +30,46 @@ options:
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) a volume
+      - Creates (C(present)) or removes (C(absent)) a volume
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-    - The hostname or management IP of Spectrum Virtualize storage
+    - The hostname or management IP of the Spectrum Virtualize storage system.
     type: str
     required: true
   domain:
     description:
-    - Domain for IBM Spectrum Virtualize storage
+    - Domain for the IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-    - REST API username for IBM Spectrum Virtualize storage
+    - REST API username for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-    - REST API password for IBM Spectrum Virtualize storage
+    - REST API password for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   mdiskgrp:
     description:
-    - Specify pool for adding the vdisk to by name or ID
+    - Specify pool for adding the VDisk to by name or ID
     type: str
   easytier:
     description:
-    - Define whether to use easyier with the vdisk
+    - Defines use of easytier with VDisk
     type: str
     default: 'off'
     choices: [ 'on', 'off', 'auto' ]
   size:
     description:
-    - Define size of vdisk
+    - Defines size of VDisk
     type: str
   unit:
     description:
-    - Define unit of storage for the size option
+    - Defines storage unit for the size option
     type: str
     choices: [ b, kb, mb, gb, tb, pb ]
     default: mb
@@ -79,36 +79,50 @@ options:
     type: bool
   log_path:
     description:
-    - Debug log of this file
+    - Debugs log for this file
     type: str
 author:
     - Peng Wang(@wangpww)
 '''
 
 EXAMPLES = '''
-- name: execute mkvdisk
-  ibm_svc_vdisk:
-    clustername: "{{clustername}}"
-    domain: "{{domain}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    log_path: /tmp/playbook.debug
-    name: volume0
-    state: present
-    mdiskgrp: 0
-    easytier: 'off'
-    size: "4294967296"
-    unit: b
+- name: Using IBM Spectrum Virtualize collection to create volume
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Create volume
+      ibm_svc_vdisk:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        log_path: /tmp/playbook.debug
+        name: volume0
+        state: present
+        mdiskgrp: 0
+        easytier: 'off'
+        size: "4294967296"
+        unit: b
 
-- name: execute rmvdisk
-  ibm_svc_vdisk:
-    clustername: "{{clustername}}"
-    domain: "{{domain}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    log_path: /tmp/playbook.debug
-    name: volume0
-    state: absent
+- name: Using IBM Spectrum Virtualize collection to delete volume
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Delete volume
+      ibm_svc_vdisk:
+        clustername: "{{clustername}}"
+        domain: "{{domain}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        log_path: /tmp/playbook.debug
+        name: volume0
+        state: absent
 '''
 RETURN = '''
 '''

@@ -17,8 +17,8 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: ibm_svc_vol_map
-short_description: Manage volume mapping on IBM Spectrum Virtualize
-                   Family storage systems
+short_description: This module manages volume mapping on IBM Spectrum
+                   Virtualize Family storage systems.
 description:
   - Ansible interface to manage volume mapping commands
     mkvdiskhostmap, rmvdiskhostmap
@@ -36,33 +36,33 @@ options:
     type: str
   state:
     description:
-      - Whether to create (C(present)), or remove (C(absent)) a volume mapping
+      - Creates (C(present)) or removes (C(absent)) a volume mapping
     choices: [ absent, present ]
     required: true
     type: str
   clustername:
     description:
-      - The hostname or management IP of
-        Spectrum Virtualize storage
+      - The hostname or management IP of the
+        Spectrum Virtualize storage system
     type: str
     required: true
   domain:
     description:
-      - Domain for IBM Spectrum Virtualize storage
+      - Domain for the IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-      - REST API username for IBM Spectrum Virtualize storage
+      - REST API username for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-      - REST API password for IBM Spectrum Virtualize storage
+      - REST API password for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   log_path:
     description:
-    - Debug log of this file
+    - Debugs log for this file
     type: str
   validate_certs:
     description:
@@ -73,8 +73,15 @@ author:
 '''
 
 EXAMPLES = '''
-- name: map volume to host
-  ibm_svc_vol_map:
+- name: Using IBM Spectrum Virtualize collection to map volume to host
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: map volume to host
+      ibm_svc_vol_map:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
         username: "{{username}}"
@@ -84,8 +91,15 @@ EXAMPLES = '''
         host: host4test
         state: present
 
-- name: unmap volume from host
-  ibm_svc_vol_map:
+- name: Using IBM Spectrum Virtualize collection to unmap volume from host
+  hosts: localhost
+  collections:
+    - ibm.spectrum_virtualize
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: unmap volume from host
+      ibm_svc_vol_map:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
         username: "{{username}}"

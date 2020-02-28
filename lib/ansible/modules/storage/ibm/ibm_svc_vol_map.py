@@ -21,17 +21,17 @@ short_description: This module manages volume mapping on IBM Spectrum
                    Virtualize Family storage systems.
 description:
   - Ansible interface to manage volume mapping commands
-    mkvdiskhostmap, rmvdiskhostmap
+    'mkvdiskhostmap' and 'rmvdiskhostmap' commands.
 version_added: "2.10"
 options:
   volname:
     description:
-      - Specifies the name of the volume that you want to map to the host
+      - Specifies the volume name for host mapping
     required: true
     type: str
   host:
     description:
-      - Specifies the host name to map the volume
+      - Specifies the host name for host mapping
     required: true
     type: str
   state:
@@ -66,14 +66,14 @@ options:
     type: str
   validate_certs:
     description:
-    - validate_certs
+    - Validate certification
     type: bool
 author:
     - Peng Wang(@wangpww)
 '''
 
 EXAMPLES = '''
-- name: Using IBM Spectrum Virtualize collection to map volume to host
+- name: Using the IBM Spectrum Virtualize collection to map a volume to a host
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -91,7 +91,7 @@ EXAMPLES = '''
         host: host4test
         state: present
 
-- name: Using IBM Spectrum Virtualize collection to unmap volume from host
+- name: Using the IBM Spectrum Virtualize collection to unmap a volume from a host
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -255,6 +255,7 @@ class IBMSVCvdiskhostmap(object):
     def apply(self):
         changed = False
         msg = None
+        modify = []
 
         vdiskhostmap_data = self.get_existing_vdiskhostmap()
         self.debug("Chun 1 : '%s'", vdiskhostmap_data)

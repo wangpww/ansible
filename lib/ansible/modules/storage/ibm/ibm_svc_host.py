@@ -22,7 +22,7 @@ short_description: This module manages hosts on IBM Spectrum Virtualize
 version_added: "2.10"
 
 description:
-  - Ansible interface to manage host commands mkhost and rmhost
+  - Ansible interface to manage 'mkhost' and 'rmhost' host commands.
 
 options:
     name:
@@ -38,22 +38,22 @@ options:
         type: str
     clustername:
         description:
-            - The hostname or management IP of
-              Spectrum Virtualize storage
+            - The hostname or management IP of the
+              Spectrum Virtualize storage system
         type: str
         required: true
     domain:
         description:
-            - Domain for IBM Spectrum Virtualize storage system
+            - Domain for the IBM Spectrum Virtualize storage system
         type: str
     username:
         description:
-            - REST API username for IBM Spectrum Virtualize storage system
+            - REST API username for the IBM Spectrum Virtualize storage system
         required: true
         type: str
     password:
         description:
-            - REST API password for IBM Spectrum Virtualize storage system
+            - REST API password for the IBM Spectrum Virtualize storage system
         required: true
         type: str
     fcwwpn:
@@ -93,21 +93,21 @@ options:
         type: str
     validate_certs:
         description:
-            - validate_certs
+            - Validate certification
         type: bool
 author:
     - Peng Wang (@wangpww)
 '''
 
 EXAMPLES = '''
-- name: Using IBM Spectrum Virtualize collection to create host
+- name: Using the IBM Spectrum Virtualize collection to create an iSCSI host
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
   gather_facts: no
   connection: local
   tasks:
-    - name: Define a new iscsi host
+    - name: Define a new iSCSI host
       ibm_svc_host:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
@@ -121,14 +121,14 @@ EXAMPLES = '''
         protocol: scsi
         type: generic
 
-- name: Using IBM Spectrum Virtualize collection to create host
+- name: Using the IBM Spectrum Virtualize collection to create an FC host
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
   gather_facts: no
   connection: local
   tasks:
-    - name: Define a new fc host
+    - name: Define a new FC host
       ibm_svc_host:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
@@ -142,7 +142,7 @@ EXAMPLES = '''
         protocol: fc
         type: generic
 
-- name: Using IBM Spectrum Virtualize collection to delete host
+- name: Using the IBM Spectrum Virtualize collection to delete a host
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -332,6 +332,7 @@ class IBMSVChost(object):
     def apply(self):
         changed = False
         msg = None
+        modify = []
 
         host_data = self.get_existing_host()
 

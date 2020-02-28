@@ -34,7 +34,7 @@ options:
     type: str
   clustername:
     description:
-    - The hostname or management IP of the Spectrum Virtualize storage system.
+    - The hostname or management IP of the Spectrum Virtualize storage system
     type: str
     required: true
   domain:
@@ -79,7 +79,7 @@ options:
     type: str
   validate_certs:
     description:
-      - validate_certs
+      - Validate certification
     type: bool
   parentmdiskgrp:
     description:
@@ -87,7 +87,7 @@ options:
     type: str
   unit:
     description:
-      - unit for subpool
+      - Unit for subpool
     type: str
   size:
     description:
@@ -98,7 +98,7 @@ author:
     - Peng Wang(@wangpww)
 '''
 EXAMPLES = '''
-- name: Using IBM Spectrum Virtualize collection to create pool
+- name: Using the IBM Spectrum Virtualize collection to create a pool
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -118,14 +118,14 @@ EXAMPLES = '''
         encrypt: no
         ext: 1024
 
-- name: Using IBM Spectrum Virtualize collection to delete pool
+- name: Using the IBM Spectrum Virtualize collection to delete a pool
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
   gather_facts: no
   connection: local
   tasks:
-    - name: make mdisk group
+    - name: delete mdisk group
       ibm_svc_mdiskgrp:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
@@ -303,6 +303,7 @@ class IBMSVCmdiskgrp(object):
     def apply(self):
         changed = False
         msg = None
+        modify = []
 
         mdiskgrp_data = self.mdiskgrp_exists()
 

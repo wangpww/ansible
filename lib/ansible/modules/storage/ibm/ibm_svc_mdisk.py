@@ -18,7 +18,7 @@ module: ibm_svc_mdisk
 short_description: This module manages MDisks on IBM Spectrum Virtualize
                    Family storage systems.
 description:
-  - Ansible interface to manage MDisk related commands
+  - Ansible interface to manage 'mkarray' and 'rmmdisk' MDisk commands.
 version_added: "2.10"
 options:
   name:
@@ -34,21 +34,21 @@ options:
     type: str
   clustername:
     description:
-      - The hostname or management IP of the Spectrum Virtualize storage system.
+      - The hostname or management IP of the Spectrum Virtualize storage system
     type: str
     required: true
   domain:
     description:
-      - Domain for IBM Spectrum Virtualize storage system
+      - Domain for the IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-      - REST API username for IBM Spectrum Virtualize storage system
+      - REST API username for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-      - REST API password for IBM Spectrum Virtualize storage system
+      - REST API password for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   drive:
@@ -57,7 +57,7 @@ options:
     type: str
   mdiskgrp:
     description:
-      - The storage pool(mdiskgrp) to which you want to add the MDisk
+      - The storage pool (mdiskgrp) to which you want to add the MDisk
     type: str
     required: true
   log_path:
@@ -66,7 +66,7 @@ options:
     type: str
   validate_certs:
     description:
-      - validate_certs
+      - Validate certification
     type: bool
   level:
     description:
@@ -83,14 +83,14 @@ author:
     - Peng Wang(@wangpww)
 '''
 EXAMPLES = '''
-- name: Using IBM Spectrum Virtualize collection to create new array mdisk
+- name: Using the IBM Spectrum Virtualize collection to create a new MDisk array
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
   gather_facts: no
   connection: local
   tasks:
-    - name: Create mdisk and named mdisk20
+    - name: Create MDisk and named mdisk20
       ibm_svc_mdisk:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
@@ -103,14 +103,14 @@ EXAMPLES = '''
         encrypt: no
         mdiskgrp: pool20
 
-- name: Using IBM Spectrum Virtualize collection to delete array mdisk
+- name: Using the IBM Spectrum Virtualize collection to delete an MDisk array
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
   gather_facts: no
   connection: local
   tasks:
-    - name: Delete mdisk named mdisk20
+    - name: Delete MDisk named mdisk20
       ibm_svc_mdisk:
         clustername: "{{clustername}}"
         domain: "{{domain}}"
@@ -271,6 +271,7 @@ class IBMSVCmdisk(object):
     def apply(self):
         changed = False
         msg = None
+        modify = []
 
         mdisk_data = self.mdisk_exists()
 

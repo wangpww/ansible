@@ -36,7 +36,7 @@ options:
     type: str
   clustername:
     description:
-    - The hostname or management IP of the Spectrum Virtualize storage system.
+    - The hostname or management IP of the Spectrum Virtualize storage system
     type: str
     required: true
   domain:
@@ -55,7 +55,8 @@ options:
     type: str
   mdiskgrp:
     description:
-    - Specify pool for adding the VDisk to by name or ID
+    - Specifies one or more storage pools to use when you are
+      creating this volume
     type: str
   easytier:
     description:
@@ -69,13 +70,13 @@ options:
     type: str
   unit:
     description:
-    - Defines storage unit for the size option
+    - Defines the size optoin for the storage unit
     type: str
     choices: [ b, kb, mb, gb, tb, pb ]
     default: mb
   validate_certs:
     description:
-    - validate_certs
+    - Validate certification
     type: bool
   log_path:
     description:
@@ -86,7 +87,7 @@ author:
 '''
 
 EXAMPLES = '''
-- name: Using IBM Spectrum Virtualize collection to create volume
+- name: Using the IBM Spectrum Virtualize collection to create a volume
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -107,7 +108,7 @@ EXAMPLES = '''
         size: "4294967296"
         unit: b
 
-- name: Using IBM Spectrum Virtualize collection to delete volume
+- name: Using the IBM Spectrum Virtualize collection to delete a volume
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -287,6 +288,7 @@ class IBMSVCvdisk(object):
     def apply(self):
         changed = False
         msg = None
+        modify = []
 
         vdisk_data = self.get_existing_vdisk()
 

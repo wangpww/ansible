@@ -41,22 +41,22 @@ options:
     choices: ['info']
   clustername:
     description:
-    - The hostname or management IP of
-      Spectrum Virtualize storage
+    - The hostname or management IP of the
+      Spectrum Virtualize storage system
     type: str
     required: true
   domain:
     description:
-    - Domain for IBM Spectrum Virtualize storage system
+    - Domain for the IBM Spectrum Virtualize storage system
     type: str
   username:
     description:
-    - REST API username for IBM Spectrum Virtualize storage system
+    - REST API username for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   password:
     description:
-    - REST API password for IBM Spectrum Virtualize storage system
+    - REST API password for the IBM Spectrum Virtualize storage system
     required: true
     type: str
   log_path:
@@ -65,7 +65,7 @@ options:
     type: str
   validate_certs:
     description:
-    - validate_certs
+    - Validate certification
     type: bool
   gather_subset:
     type: list
@@ -73,7 +73,7 @@ options:
     description:
     - List of string variables to specify the IBM Spectrum Virtualize entities
       for which information is required.
-    - all - List of all IBM Spectrum Virtualize entities
+    - all - list of all IBM Spectrum Virtualize entities
             supported by the module
     - vol - lists information for VDisks
     - pool - lists information for mdiskgrps
@@ -86,7 +86,7 @@ options:
     - targetportfc - lists information for WWPN which is required to set up
                      FC zoning and to display the current failover status
                      of host I/O ports
-    - fcmap - lists information for FC maps info
+    - fcmap - lists information for FC maps
     - fcconsistgrp - displays a concise list or a detailed
                      view of FlashCopy consistency groups
     - iscsiport - lists information for iSCSI ports
@@ -101,7 +101,7 @@ options:
 '''
 
 EXAMPLES = '''
-- name: Using IBM Spectrum Virtualize collection to gather storage info
+- name: Using the IBM Spectrum Virtualize collection to gather storage information
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize
@@ -118,7 +118,7 @@ EXAMPLES = '''
         state: info
         gather_subset: vol
 
-- name: Using IBM Spectrum Virtualize collection to gather storage info
+- name: Using the IBM Spectrum Virtualize collection to gather storage information
   hosts: localhost
   collections:
     - ibm.spectrum_virtualize

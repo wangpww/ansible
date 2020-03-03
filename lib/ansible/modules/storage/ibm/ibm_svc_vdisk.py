@@ -55,7 +55,7 @@ options:
     type: str
   mdiskgrp:
     description:
-    - Specifies one or more storage pools to use when you are
+    - Specifies one or more storage pools name to use when you are
       creating this volume
     type: str
   easytier:
@@ -103,7 +103,7 @@ EXAMPLES = '''
         log_path: /tmp/playbook.debug
         name: volume0
         state: present
-        mdiskgrp: 0
+        mdiskgrp: Pool0
         easytier: 'off'
         size: "4294967296"
         unit: b
